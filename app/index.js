@@ -79,7 +79,7 @@ const excel_spec = {
         cellStyle: function (value, row) {
             return value ? value : "-"
         },
-        width: 150
+        width: 200
     },
     residence_addr: {
         displayName: 'Residence Address',
@@ -103,7 +103,7 @@ const excel_spec = {
         cellStyle: function (value, row) {
             return value ? value : "-"
         },
-        width: 150
+        width: 200
     }
 }
 
@@ -152,7 +152,7 @@ const FILTER_TYPE_MAAT_SPEC = {
 
 var rows = {};
 var strRow = ""
-var counter = 31
+var counter = 501
 
 function printRows() {
     //var profiles = {};
@@ -170,12 +170,19 @@ function printRows() {
                 return
             }
 
+            // console.log(row)
             strRow += row
             if (index == (Object.keys(rows).length - 1)) {
                 //profiles[](strRow)
                 // console.log(strRow)
+                if (strRow.indexOf("OFFICE") == -1  && strRow.indexOf("RESIDENCE") == -1)
+                return
+
+                try{
                 var rowModel = new model(strRow)
-                console.log(rowModel.getData())
+                } catch(ex){
+                    console.log(ex)
+                }
 
                 if (rowModel.isACA()) {
                     FILTER_TYPE_ACA_SPEC.data.push(rowModel.getData())
@@ -201,14 +208,9 @@ function printRows() {
                     FILTER_TYPE_MBA_SPEC.data.push(rowModel.getData())
                 }
 
-
-
-
                 console.log("counter" + counter)
                 if (counter == 0) {
                     try {
-                        console.log("data")
-                        console.log(FILTER_TYPE_FMAAT_SPEC.data)
                         const report = excel.buildExport([FILTER_TYPE_ACA_SPEC,
                             FILTER_TYPE_FCA_SPEC,
                             FILTER_TYPE_FMAAT_SPEC,
@@ -226,22 +228,11 @@ function printRows() {
                         console.log(err)
                     }
                 }
-
-
-
-
-
             }
         });
-
-
-
-
-
-
 }
 
-new pdfreader.PdfReader().parseFileItems('./app/pdfs/directory-of-members-2017-1-500-1-200-1-30.pdf', function (err, item) {
+new pdfreader.PdfReader().parseFileItems('./app/pdfs/directory-of-members-2017-1-500.pdf', function (err, item) {
 
     if (!item || item.page) {
 
