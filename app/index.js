@@ -152,7 +152,7 @@ const FILTER_TYPE_MAAT_SPEC = {
 
 var rows = {};
 var strRow = ""
-var counter = 1
+var counter = 31
 
 function printRows() {
     //var profiles = {};
@@ -205,7 +205,7 @@ function printRows() {
 
 
                 console.log("counter" + counter)
-                if (counter == -1) {
+                if (counter == 0) {
                     try {
                         console.log("data")
                         console.log(FILTER_TYPE_FMAAT_SPEC.data)
@@ -241,7 +241,7 @@ function printRows() {
 
 }
 
-new pdfreader.PdfReader().parseFileItems('./app/pdfs/page.pdf', function (err, item) {
+new pdfreader.PdfReader().parseFileItems('./app/pdfs/directory-of-members-2017-1-500-1-200-1-30.pdf', function (err, item) {
 
     if (!item || item.page) {
 
