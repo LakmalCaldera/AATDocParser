@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "pdfreader": "^0.2.4"
+    "node-excel-export": "^1.4.2",
+    "pdfreader": "^0.2.4",
+    "write": "^1.0.3"
   }
 }

@@ -55,7 +55,7 @@ data["office_addr"] = newtext ? newtext : "-"
 
 // OFFICE tel
 if (isOfficeTel) {
-var re = /(.*Tel No:.\s?)(.*)((\s?Fax:.*)|(\s?E-Mail:.*))/;
+var re = /(.*Tel No:.\s?)(.*?)((\s?Fax:.*)|(\s?E-Mail:.*))/;
 var newtext = office_str.slice(0).replace(re, "$2");
     console.log("Office Tel : " + newtext);
     data["office_tel"] = newtext ? newtext : "-"
@@ -107,7 +107,7 @@ console.log(`isResidenceFax : ${isResidenceFax}`)
 console.log(`isResidenceEmail : ${isResidenceEmail}`)
 
 // Residence addr
-var re = /(.*RESIDENCE\s?)(.*?)((\s?Tel No:.*)|(\s?Fax:.*)|(\s?E-Mail:.*))?/;
+var re = /(.*RESIDENCE\s?)(.*?)((\s?Tel No:.*)|(\s?Fax:.*)|(\s?E-Mail:.*))/;
 var newtext = str.slice(0).replace(re, "$2");
 console.log("Residence address : " + newtext);
 data["residence_addr"] = newtext ? newtext : "-"
@@ -117,7 +117,7 @@ if (isResidenceContent){
 
 // Residence tel
 if (isResidenceTel) {
-var re = /(.*Tel No:.\s?)(.*)((\s?Fax:.*)|(\s?E-Mail:.*))?/;
+var re = /(.*Tel No:.\s?)(.*?)((\s?Fax:.*)|(\s?E-Mail:.*))?/;
 var newtext = residence_str.slice(0).replace(re, "$2");
 console.log("Residence Tel : " + newtext);
     data["residence_tel"] = newtext ? newtext : "-"

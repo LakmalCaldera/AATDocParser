@@ -1,5 +1,7 @@
 var pdfreader = require('pdfreader');
 var model = require('./model.js');
+var writeFile = require('write');
+var excel = require('node-excel-export');
 
 const styles = {
     headerDark: {
@@ -45,7 +47,7 @@ const excel_spec = {
         cellStyle: function (value, row) {
             return value ? value : "-"
         },
-        width: 120
+        width: 1200
     },
     office_addr: {
         displayName: 'Office Address',
@@ -53,7 +55,7 @@ const excel_spec = {
         cellFormat: function (value, row) {
             return value ? value : "-"
         },
-        width: '120'
+        width: 500
     },
     office_tel: {
         displayName: 'Office Tel No',
@@ -61,7 +63,7 @@ const excel_spec = {
         cellStyle: function (value, row) {
             return value ? value : "-"
         },
-        width: 120
+        width: 200
     },
     office_fax: {
         displayName: 'Office Fax No',
@@ -69,7 +71,7 @@ const excel_spec = {
         cellFormat: function (value, row) {
             return value ? value : "-"
         },
-        width: '120'
+        width: 200
     },
     office_email: {
         displayName: 'Office Email',
@@ -77,7 +79,7 @@ const excel_spec = {
         cellStyle: function (value, row) {
             return value ? value : "-"
         },
-        width: 120
+        width: 150
     },
     residence_addr: {
         displayName: 'Residence Address',
@@ -85,7 +87,7 @@ const excel_spec = {
         cellFormat: function (value, row) {
             return value ? value : "-"
         },
-        width: '120'
+        width: 400
     },
     residence_tel: {
         displayName: 'Residence Tel No',
@@ -93,7 +95,7 @@ const excel_spec = {
         cellStyle: function (value, row) {
             return value ? value : "-"
         },
-        width: 120
+        width: 200
     },
     residence_email: {
         displayName: 'Residence Email',
@@ -101,7 +103,7 @@ const excel_spec = {
         cellStyle: function (value, row) {
             return value ? value : "-"
         },
-        width: 120
+        width: 150
     }
 }
 
@@ -150,21 +152,13 @@ const FILTER_TYPE_MAAT_SPEC = {
 
 var rows = {};
 var strRow = ""
+var counter = 1
 
 function printRows() {
-
-    FILTER_TYPE_ACA_SPEC.data.push({
-        name_category: "",
-        office_addr: "",
-        office_tel: "",
-        office_fax: "",
-        office_email: "",
-        residence_addr: "",
-        residence_tel: ""
-    })
-
     //var profiles = {};
     // console.log(rows)
+
+    counter--;
 
     Object.keys(rows)
         .sort((y1, y2) => parseFloat(y1) - parseFloat(y2))
@@ -179,49 +173,83 @@ function printRows() {
             strRow += row
             if (index == (Object.keys(rows).length - 1)) {
                 //profiles[](strRow)
-                console.log(strRow)
+                // console.log(strRow)
                 var rowModel = new model(strRow)
+                console.log(rowModel.getData())
 
-                if (rowModel.isACA()){
+                if (rowModel.isACA()) {
                     FILTER_TYPE_ACA_SPEC.data.push(rowModel.getData())
                 }
 
-                if (rowModel.isFCA()){
+                if (rowModel.isFCA()) {
                     FILTER_TYPE_FCA_SPEC.data.push(rowModel.getData())
                 }
 
-                if (rowModel.isFMAAT()){
+                if (rowModel.isFMAAT()) {
                     FILTER_TYPE_FMAAT_SPEC.data.push(rowModel.getData())
                 }
 
-                if (rowModel.isSAT()){
+                if (rowModel.isSAT()) {
                     FILTER_TYPE_SAT_SPEC.data.push(rowModel.getData())
                 }
 
-                if (rowModel.isMAAT()){
+                if (rowModel.isMAAT()) {
                     FILTER_TYPE_MAAT_SPEC.data.push(rowModel.getData())
                 }
 
-                if (rowModel.isMBA()){
+                if (rowModel.isMBA()) {
                     FILTER_TYPE_MBA_SPEC.data.push(rowModel.getData())
-                }   
+                }
+
+
+
+
+                console.log("counter" + counter)
+                if (counter == -1) {
+                    try {
+                        console.log("data")
+                        console.log(FILTER_TYPE_FMAAT_SPEC.data)
+                        const report = excel.buildExport([FILTER_TYPE_ACA_SPEC,
+                            FILTER_TYPE_FCA_SPEC,
+                            FILTER_TYPE_FMAAT_SPEC,
+                            FILTER_TYPE_SAT_SPEC,
+                            FILTER_TYPE_MAAT_SPEC,
+                            FILTER_TYPE_MBA_SPEC]);
+
+                        writeFile('data.xlsx', report).then(() => {
+                            console.log("Document Ready")
+                        }).catch((err) => {
+                            console.log(err)
+                        })
+
+                    } catch (err) {
+                        console.log(err)
+                    }
+                }
+
+
+
+
+
             }
         });
+
+
+
+
 
 
 }
 
 new pdfreader.PdfReader().parseFileItems('./app/pdfs/page.pdf', function (err, item) {
 
-    console.log(item)
-
     if (!item || item.page) {
 
-         // end of file, or page
-    printRows();
-    console.log('PAGE:', item.page);
-    rows = {}; // clear rows for next page
-    strRow = ""
+        // end of file, or page
+        printRows();
+        console.log('PAGE:', item.page);
+        rows = {}; // clear rows for next page
+        strRow = ""
 
     }
     else if (item.text) {
